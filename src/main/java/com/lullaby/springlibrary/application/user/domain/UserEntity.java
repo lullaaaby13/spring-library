@@ -28,6 +28,16 @@ public class UserEntity extends BaseEntity {
     @Column(name = "user_role")
     private UserRole userRole;
 
+    @Column(name = "email")
+    private String email;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "oauth_provider")
+    private OauthProvider oauthProvider;
+
+    @Column(name = "oauth_id")
+    private String oauthId;
+
     public UserEntity() {
     }
 

@@ -18,6 +18,8 @@ spring:
   thymeleaf:
     cache: false
 
+
+
 jwt:
   secret: W6pd5KQixwxUdMZLQou52w44YxmxZBcDf8Ctk2GqsNxZW4ySqRw3ph6RMAE0p2Xh
   access-token-expiration: 3600
