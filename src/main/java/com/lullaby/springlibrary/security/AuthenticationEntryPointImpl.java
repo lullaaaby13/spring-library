@@ -27,8 +27,6 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-
-        log.error("AuthenticationEntryPointImpl.commence : {}", authException.getMessage());
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(objectMapper.writeValueAsString(new CommonErrorResponse(HttpStatus.UNAUTHORIZED, "인증이 필요합니다.", request.getRequestURI())));
