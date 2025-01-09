@@ -15,6 +15,7 @@ public class AuthenticatedUser implements UserDetails {
     private final String account;
     private final String userName;
     private final UserRole userRole;
+    private final String email;
     private final List<GrantedAuthority> userRoles;
 
     public AuthenticatedUser(UserResponse entity) {
@@ -22,6 +23,7 @@ public class AuthenticatedUser implements UserDetails {
         this.account = entity.getAccount();
         this.userName = entity.getUserName();
         this.userRole = entity.getUserRole();
+        this.email = entity.getEmail();
         this.userRoles = List.of(new SimpleGrantedAuthority(userRole.name()));
     }
 
@@ -55,4 +57,9 @@ public class AuthenticatedUser implements UserDetails {
     public UserRole getUserRole() {
         return userRole;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
 }

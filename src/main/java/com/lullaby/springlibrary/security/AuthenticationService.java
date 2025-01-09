@@ -1,8 +1,9 @@
 package com.lullaby.springlibrary.security;
 
 import com.lullaby.springlibrary.application.user.domain.UserEntity;
-import com.lullaby.springlibrary.application.user.domain.UserRole;
 import com.lullaby.springlibrary.application.user.repository.UserRepository;
+import com.lullaby.springlibrary.security.dto.AuthenticationCommand;
+import com.lullaby.springlibrary.security.dto.AuthenticationResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,17 +34,15 @@ public class AuthenticationService {
         return new AuthenticationResponse.Login(accessToken, refreshToken);
     }
 
-
     public void join(AuthenticationCommand.Join command) {
         if (userRepository.existsByAccount(command.account())) {
             throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "이미 존재하는 계정입니다.");
         }
 
-        UserEntity userEntity = new UserEntity(
+        UserEntity userEntity = UserEntity.byLocal(
                 command.account()
                 , passwordEncoder.encode(command.password())
-                , command.userName()
-                , UserRole.USER);
+                , command.userName());
         userRepository.save(userEntity);
     }
 }

@@ -1,4 +1,4 @@
-package com.lullaby.springlibrary.security;
+package com.lullaby.springlibrary.security.dto;
 
 public class AuthenticationCommand {
 

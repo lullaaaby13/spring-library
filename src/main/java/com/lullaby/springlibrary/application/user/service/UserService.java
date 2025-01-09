@@ -5,12 +5,15 @@ import com.lullaby.springlibrary.application.user.domain.UserRole;
 import com.lullaby.springlibrary.application.user.dto.UserCommand;
 import com.lullaby.springlibrary.application.user.dto.UserResponse;
 import com.lullaby.springlibrary.application.user.repository.UserRepository;
+import com.lullaby.springlibrary.security.AuthenticatedUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.HttpClientErrorException;
+
+import java.util.Optional;
 
 @Transactional
 @RequiredArgsConstructor
@@ -20,10 +23,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserResponse findById(Long userId) {
-        UserEntity userEntity = userRepository.findById(userId)
-                .orElseThrow(() -> new HttpClientErrorException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
-        return new UserResponse(userEntity);
+    public Optional<UserResponse> findByEmail(String email) {
+        return userRepository.findByEmail(email).map(UserResponse::new);
     }
 
     public UserResponse findByAccount(String account) {
@@ -32,12 +33,24 @@ public class UserService {
         return new UserResponse(userEntity);
     }
 
-    public UserResponse create(UserCommand.Create command) {
-        UserEntity userEntity = new UserEntity(
+    public UserResponse createByLocal(UserCommand.CreateByLocal command) {
+        UserEntity userEntity = UserEntity.byLocal(
                 command.account()
                 , passwordEncoder.encode(command.password())
                 , command.userName()
-                , UserRole.USER
+        );
+
+        userEntity = userRepository.save(userEntity);
+
+        return new UserResponse(userEntity);
+    }
+
+    public UserResponse createByOAuth(UserCommand.CreateByOAuth command) {
+        UserEntity userEntity = UserEntity.byOauth(
+                command.email()
+                , command.userName()
+                , command.oauthProvider()
+                , command.oauthId()
         );
 
         userEntity = userRepository.save(userEntity);

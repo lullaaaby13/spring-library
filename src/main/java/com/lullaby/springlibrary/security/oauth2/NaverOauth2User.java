@@ -7,31 +7,30 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Getter
-public class GoogleOauth2User extends AuthenticatedUser implements OAuth2User {
+public class NaverOauth2User extends AuthenticatedUser implements OAuth2User {
 
     private final String oauthId;
-    private final String name;
-    private final String givenName;
-    private final String familyName;
-    private final String picture;
+    private final String nickname;
+    private final String profileImage;
     private final String email;
-    private final Boolean emailVerified;
+    private final String mobile;
+    private final String name;
     private final Map<String, Object> attributes;
 
-    public GoogleOauth2User(UserResponse entity, OAuth2User oAuth2User) {
+    public NaverOauth2User(UserResponse entity, OAuth2User oAuth2User) {
         super(entity);
         this.attributes = oAuth2User.getAttributes();
-        this.oauthId = (String) attributes.get("sub");
-        this.name = (String) attributes.get("name");
-        this.givenName = (String) attributes.get("given_name");
-        this.familyName = (String) attributes.get("family_name");
-        this.picture = (String) attributes.get("picture");
-        this.email = (String) attributes.get("email");
-        this.emailVerified = (Boolean) attributes.get("email_verified");
+        Map<String, String> response = (LinkedHashMap<String, String>) oAuth2User.getAttributes().get("response");
+        this.oauthId = response.get("id");
+        this.nickname = response.get("nickname");
+        this.profileImage = response.get("profile_image");
+        this.email = response.get("email");
+        this.mobile = response.get("mobile");
+        this.name = response.get("name");
     }
 
     @Override

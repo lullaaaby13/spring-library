@@ -34,6 +34,7 @@ public class SecurityConfig {
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final AccessDeniedHandler accessDeniedHandler;
     private final OAuth2UserService oAuth2UserService;
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -57,7 +58,7 @@ public class SecurityConfig {
                 )
                 .oauth2Login(oauth2Configurer -> oauth2Configurer
                         .loginPage("/login")
-                        .successHandler(successHandler())
+                        .successHandler(authenticationSuccessHandler)
                         .userInfoEndpoint(userInfoEndpoint ->
                                 userInfoEndpoint.userService(oAuth2UserService)
                         )
@@ -71,22 +72,4 @@ public class SecurityConfig {
 
     }
 
-    @Bean
-    public AuthenticationSuccessHandler successHandler() {
-        return ((request, response, authentication) -> {
-            DefaultOAuth2User defaultOAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
-
-            String id = defaultOAuth2User.getAttributes().get("id").toString();
-            String body = """
-                    {"id":"%s"}
-                    """.formatted(id);
-
-            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-
-            PrintWriter writer = response.getWriter();
-            writer.println(body);
-            writer.flush();
-        });
-    }
 }

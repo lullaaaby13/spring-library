@@ -41,11 +41,23 @@ public class UserEntity extends BaseEntity {
     public UserEntity() {
     }
 
-    public UserEntity(String account, String password, String userName, UserRole userRole) {
-        setAccount(account);
-        setPassword(password);
-        setUserName(userName);
-        setUserRole(userRole);
+    public static UserEntity byLocal(String account, String password, String userName) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setAccount(account);
+        userEntity.setPassword(password);
+        userEntity.setUserName(userName);
+        userEntity.setUserRole(UserRole.USER);
+        return userEntity;
+    }
+
+    public static UserEntity byOauth(String email, String userName, OauthProvider oauthProvider, String oauthId) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUserName(userName);
+        userEntity.setEmail(email);
+        userEntity.setOauthProvider(oauthProvider);
+        userEntity.setOauthId(oauthId);
+        userEntity.setUserRole(UserRole.USER);
+        return userEntity;
     }
 
     public void setAccount(String account) {
@@ -68,5 +80,17 @@ public class UserEntity extends BaseEntity {
     public void setUserRole(UserRole userRole) {
         notNull(userRole, "사용자 권한을 입력해주세요.");
         this.userRole = userRole;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setOauthProvider(OauthProvider oauthProvider) {
+        this.oauthProvider = oauthProvider;
+    }
+
+    public void setOauthId(String oauthId) {
+        this.oauthId = oauthId;
     }
 }

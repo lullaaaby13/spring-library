@@ -29,4 +29,10 @@ public class ValidationUtils {
         }
     }
 
+    public static void isEmail(String email, String message) {
+        if (email == null || !email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$")) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, message);
+        }
+    }
+
 }
