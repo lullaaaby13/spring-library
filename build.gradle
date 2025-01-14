@@ -68,7 +68,8 @@ dependencies {
 
     // RestAssured
     testImplementation 'io.rest-assured:rest-assured:5.5.0'
-
+    testImplementation 'org.testcontainers:junit-jupiter:1.19.0'
+    testImplementation 'org.testcontainers:mysql:1.19.0'
 }
 
 
